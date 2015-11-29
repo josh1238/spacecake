@@ -7,12 +7,12 @@ import com
 
 ident = {
   'ident': 'SpaceCake',
-  'host': 'irc.freenode.net',
+  'host': 'irc.efnet.org',
   'port': 6667,
 #  'serv': 'whatIsThisVariableForAgain',
-  'nick': 'spacecake',
+  'nick': 'potbot',
   'real_name': 'Space Cake',
-  'chan': '#r.trees'
+  'chan': '#politic'
 }
 
 def colorize(text, color):
@@ -56,11 +56,13 @@ class IRCConn(object):
     self.nick = i['nick']
     self.join_first = i['chan']
     self.port = i['port']
+    self.connected = False
     self.channels = set()
 
   def connect(self):
     self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     self.sock.connect((self.host, self.port))
+    self.connected = True
     self._send("USER %s %s %s :%s" % (self.ident, '0', '*', self.name))
     self._send("NICK %s" % self.nick)
     # wait until we have received the MOTD in full before proceeding
@@ -71,7 +73,7 @@ class IRCConn(object):
     The mainloop
     """
     # Rather than while True: for speed
-    while 1:
+    while self.connected:
       line = self.receive()
       thredd = threading.Thread(target=self.parse, args=(line,))
       thredd.start()
@@ -192,11 +194,11 @@ class IRCConn(object):
       self.channels.remove(chan)
 
   def quit(self, msg=None):
+    self.connected = False
     if msg:
       self._send("QUIT :%s" % msg)
     else:
       self._send("QUIT")
-    sys.exit(0)
 
   #### Internals ####
   def _send(self, msg):
@@ -280,7 +282,9 @@ class IRCConn(object):
 
   def handle_error(self, tokens):
     print "Error. tokens: %s" % tokens
-    self.connect()
+    if tokens[0] == ':Closing' and tokens[1] == 'Link:':
+    #self.connect()
+      sys.exit(1)
 
   def on_connect(self):
     """
