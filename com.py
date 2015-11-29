@@ -1,10 +1,11 @@
 #!/usr/bin/env python
+# coding=utf-8
 """
 This is a module for bot commands so that bot.py can import them.
 Commands are if statements within functions. The ls tables let bot.py know that the command exists.
 """
 
-addrls = ['slap']
+addrls = ['quit','slap']
 ls = ['!flip','.flip','^5']
 
 def AddrFuncs(cmd, args, data, conn):
@@ -14,10 +15,16 @@ def AddrFuncs(cmd, args, data, conn):
     chan = data['channel']
     msg = "slaps %s with a floppy fish, then points at %s" % (target, slappee)
     conn.describe(msg, chan)
+  if cmd == 'quit':
+    asker = data['sender'].split('!')[0]
+    if asker == 'josh1238':
+      conn.quit('shutting down')
+    else:
+      conn._send(u'┌∩┐(ಠ_ಠ)┌∩┐')
 
 def UnAddrFuncs(cmd, args, data, conn):
   if cmd == '!flip' or cmd == '.flip':
-    conn._send("(ノ°▽°)ノ︵┻━┻")
+    conn._send(u'(ノ°▽°)ノ︵┻━┻')
   elif cmd == '^5':
     fiver = data['sender'].split('!')[0]
     chan = data['channel']
@@ -34,4 +41,4 @@ def OnKickedFuncs(msg, data, conn):
   pass
 
 def OtherKickedFuncs(msg, data, conn):
-  conn._send("╭∩╮ʕ•ᴥ•ʔ╭∩╮")
+  conn._send(u'╭∩╮ʕ•ᴥ•ʔ╭∩╮')

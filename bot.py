@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# coding=utf-8
 import sys
 import socket
 import threading
@@ -190,13 +191,19 @@ class IRCConn(object):
     if chan in self.channels:
       self.channels.remove(chan)
 
+  def quit(self, msg=None):
+    if msg:
+      self._send("QUIT %s" % msg)
+    else:
+      self._send("QUIT")
+
   #### Internals ####
   def _send(self, msg):
     """
     Send something (anything) to the IRC server.
     """
     print "Sending: %s\r\n" % msg
-    self.sock.send(("%s\r\n" % msg).encode())
+    self.sock.send(("%s\r\n" % msg).encode(encoding='UTF-8',errors='strict'))
 
   def pong(self, trail):
     self._send("PONG %s" % trail)
