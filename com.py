@@ -6,7 +6,7 @@ Commands are if statements within functions. The ls tables let bot.py know that 
 """
 
 addrls = ['quit','slap']
-ls = ['!flip','.flip','^5']
+ls = ['!unflip','.unflip','!flip','.flip','^5']
 
 def AddrFuncs(cmd, args, data, conn):
   chan = data['channel']
@@ -26,6 +26,8 @@ def UnAddrFuncs(cmd, args, data, conn):
   chan = data['channel']
   if cmd == '!flip' or cmd == '.flip':
     conn.say('(ノ°▽°)ノ︵┻━┻'.decode('utf-8'), chan)
+  elif cmd == '!unflip' or cmd == '.unflip':
+    conn.say('┬─┬ノ( ◕◡◕ ノ)'.decode('utf-8'), chan)
   elif cmd == '^5':
     fiver = data['sender'].split('!')[0]
     chan = data['channel']
