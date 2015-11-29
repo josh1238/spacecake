@@ -193,9 +193,10 @@ class IRCConn(object):
 
   def quit(self, msg=None):
     if msg:
-      self._send("QUIT %s" % msg)
+      self._send("QUIT :%s" % msg)
     else:
       self._send("QUIT")
+    sys.exit(0)
 
   #### Internals ####
   def _send(self, msg):

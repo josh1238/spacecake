@@ -20,11 +20,11 @@ def AddrFuncs(cmd, args, data, conn):
     if asker == 'josh1238':
       conn.quit('shutting down')
     else:
-      conn._send(u'┌∩┐(ಠ_ಠ)┌∩┐')
+      conn._send('┌∩┐(ಠ_ಠ)┌∩┐'.decode('utf-8'))
 
 def UnAddrFuncs(cmd, args, data, conn):
   if cmd == '!flip' or cmd == '.flip':
-    conn._send(u'(ノ°▽°)ノ︵┻━┻')
+    conn._send('(ノ°▽°)ノ︵┻━┻'.decode('utf-8'))
   elif cmd == '^5':
     fiver = data['sender'].split('!')[0]
     chan = data['channel']
@@ -41,4 +41,4 @@ def OnKickedFuncs(msg, data, conn):
   pass
 
 def OtherKickedFuncs(msg, data, conn):
-  conn._send(u'╭∩╮ʕ•ᴥ•ʔ╭∩╮')
+  conn._send('╭∩╮ʕ•ᴥ•ʔ╭∩╮'.decode('utf-8'))
