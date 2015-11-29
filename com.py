@@ -9,10 +9,10 @@ addrls = ['quit','slap']
 ls = ['!flip','.flip','^5']
 
 def AddrFuncs(cmd, args, data, conn):
+  chan = data['channel']
   if cmd == 'slap':
     target = args[0]
     slappee = data['sender'].split('!')[0]
-    chan = data['channel']
     msg = "slaps %s with a floppy fish, then points at %s" % (target, slappee)
     conn.describe(msg, chan)
   if cmd == 'quit':
@@ -20,11 +20,12 @@ def AddrFuncs(cmd, args, data, conn):
     if asker == 'josh1238':
       conn.quit('shutting down')
     else:
-      conn._send(b'┌∩┐(ಠ_ಠ)┌∩┐'.decode('utf-8'))
+      conn.say('┌∩┐(ಠ_ಠ)┌∩┐'.decode('utf-8'), chan)
 
 def UnAddrFuncs(cmd, args, data, conn):
+  chan = data['channel']
   if cmd == '!flip' or cmd == '.flip':
-    conn._send(b'(ノ°▽°)ノ︵┻━┻'.decode('utf-8'))
+    conn.say('(ノ°▽°)ノ︵┻━┻'.decode('utf-8'), chan)
   elif cmd == '^5':
     fiver = data['sender'].split('!')[0]
     chan = data['channel']
@@ -41,4 +42,5 @@ def OnKickedFuncs(msg, data, conn):
   pass
 
 def OtherKickedFuncs(msg, data, conn):
-  conn._send(b'╭∩╮ʕ•ᴥ•ʔ╭∩╮'.decode('utf-8'))
+  chan = data['channel']
+  conn.say('╭∩╮ʕ•ᴥ•ʔ╭∩╮'.decode('utf-8'), chan)

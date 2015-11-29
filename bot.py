@@ -7,12 +7,12 @@ import com
 
 ident = {
   'ident': 'SpaceCake',
-  'host': 'irc.efnet.org',
+  'host': 'irc.freenode.net',
   'port': 6667,
 #  'serv': 'whatIsThisVariableForAgain',
-  'nick': 'potbot',
+  'nick': 'spacecake',
   'real_name': 'Space Cake',
-  'chan': '#politic'
+  'chan': '#r.trees'
 }
 
 def colorize(text, color):
@@ -206,7 +206,7 @@ class IRCConn(object):
     Send something (anything) to the IRC server.
     """
     print "Sending: %s\r\n" % msg
-    self.sock.send(("%s\r\n" % msg).encode(encoding='UTF-8',errors='strict'))
+    self.sock.send(("%s\r\n" % msg).encode('utf-8'))
 
   def pong(self, trail):
     self._send("PONG %s" % trail)
@@ -225,7 +225,7 @@ class IRCConn(object):
         nxt_ch = self.sock.recv(1)
         if nxt_ch == b'\n':
           try:
-            line = b''.join(buf).decode()
+            line = b''.join(buf).decode('utf-8')
           except(UnicodeEncodeError, UnicodeDecodeError):
             self.handle_encoding_error()
             return ''
@@ -238,7 +238,7 @@ class IRCConn(object):
       return None
     else:
       try:
-        parsable = line.strip(b'\r\n').decode()
+        parsable = line.strip(b'\r\n').decode('utf-8')
         print "Received: %s" % parsable
         return parsable
       except(UnicodeEncodeError, UnicodeDecodeError):
