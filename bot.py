@@ -326,13 +326,13 @@ class Bot(object):
 #      func(nicks, channel)
 
   def handle_join(self, channel):
-    com.OnJoinFuncs(channel)
+    com.OnJoinFuncs(channel, self.conn)
 
   def handle_other_join(self, tokens, joiner):
     chan = tokens.pop().strip(':')
     nick, host = joiner.split('!')
     data = {'channel': chan, 'joiner': joiner, 'nick': nick, 'host': host}
-    com.OtherJoinFuncs(data)
+    com.OtherJoinFuncs(data, self.conn)
 
   def handle_kick(self, tokens, sender):
     chan = tokens.pop(0)
@@ -346,9 +346,9 @@ class Bot(object):
     data = {'channel': chan, 'sender': sender, 'nick': nick, 'host': host, 'kickee': tokens.pop(0)}
     msg = tokens[0].lstrip(':') if tokens else None
     if is_about_me:
-      com.OnKickedFuncs(msg, data)
+      com.OnKickedFuncs(msg, data, self.conn)
     else:
-      com.OtherKickedFuncs(msg, data)
+      com.OtherKickedFuncs(msg, data, self.conn)
 
   def main(self):
     """
