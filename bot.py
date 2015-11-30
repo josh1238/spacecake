@@ -7,12 +7,12 @@ import com
 
 ident = {
   'ident': 'SpaceCake',
-  'host': 'irc.freenode.net',
+  'host': 'irc.efnet.org',
   'port': 6667,
 #  'serv': 'whatIsThisVariableForAgain',
-  'nick': 'spacecake',
+  'nick': 'potbot',
   'real_name': 'Space Cake',
-  'chan': '#r.trees'
+  'chan': '#politic'
 }
 
 def colorize(text, color):

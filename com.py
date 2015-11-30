@@ -27,7 +27,7 @@ def UnAddrFuncs(cmd, args, data, conn):
   if cmd == '!flip' or cmd == '.flip':
     conn.say('(ノ°▽°)ノ︵┻━┻'.decode('utf-8'), chan)
   elif cmd == '!unflip' or cmd == '.unflip':
-    conn.say('┬─┬ノ( ◕◡◕ ノ)'.decode('utf-8'), chan)
+    conn.say('┬─┬ノ(°▽°ノ)'.decode('utf-8'), chan)
   elif cmd == '^5':
     fiver = data['sender'].split('!')[0]
     chan = data['channel']
