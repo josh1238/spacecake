@@ -7,10 +7,12 @@ import com
 
 ident = {
   'ident': 'SpaceCake',
-  'host': 'irc.efnet.org',
+  'host': 'irc.freenode.net',
+#  'host': 'irc.efnet.org',
   'port': 6667,
 #  'serv': 'whatIsThisVariableForAgain',
-  'nick': 'potbot',
+  'nick': 'spacecake',
+#  'nick': 'potbot',
   'real_name': 'Space Cake',
   'chan': '#politic'
 }
