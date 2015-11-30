@@ -4,6 +4,7 @@ import sys
 import socket
 import threading
 import com
+from imp import reload
 
 ident = {
   'ident': 'SpaceCake',
@@ -14,7 +15,8 @@ ident = {
   'nick': 'spacecake',
 #  'nick': 'potbot',
   'real_name': 'Space Cake',
-  'chan': '#politic'
+  'chan': '#r.trees'
+#  'chan': '#politic'
 }
 
 def colorize(text, color):
@@ -326,7 +328,13 @@ class Bot(object):
       args = tokens[1:]
     except IndexError:
       args = []
-    if is_to_me and cmd in com.addrls:
+    if is_to_me and cmd == 'reload':
+      if data['sender'].split('!')[0] == 'josh1238':
+        reload(com)
+        self.conn.say('Commands module reloaded', self.ident['chan'])
+      else:
+        self.conn.say('┌∩┐(ಠ_ಠ)┌∩┐'.decode('utf-8'), self.ident['chan'])
+    elif is_to_me and cmd in com.addrls:
       com.AddrFuncs(cmd, args, data, self.conn)
     elif cmd in com.ls:
       com.UnAddrFuncs(cmd, args, data, self.conn)

@@ -5,8 +5,8 @@ This is a module for bot commands so that bot.py can import them.
 Commands are if statements within functions. The ls tables let bot.py know that the command exists.
 """
 
-addrls = ['quit','slap']
-ls = ['!unflip','.unflip','!flip','.flip','^5']
+addrls = ['quit','slap','die']
+ls = ['!help','.help','!unflip','.unflip','!flip','.flip','^5']
 
 def AddrFuncs(cmd, args, data, conn):
   chan = data['channel']
@@ -15,15 +15,19 @@ def AddrFuncs(cmd, args, data, conn):
     slappee = data['sender'].split('!')[0]
     msg = "slaps %s with a floppy fish, then points at %s" % (target, slappee)
     conn.describe(msg, chan)
-  if cmd == 'quit':
+  elif cmd == 'quit':
     asker = data['sender'].split('!')[0]
     if asker == 'josh1238':
       conn.quit('shutting down')
     else:
       conn.say('┌∩┐(ಠ_ಠ)┌∩┐'.decode('utf-8'), chan)
+  elif cmd == 'die':
+    conn.say('nou', chan)
 
 def UnAddrFuncs(cmd, args, data, conn):
   chan = data['channel']
+  if cmd == '!help' or cmd == '.help':
+    conn.say("happypizza doesn't want to help you", chan)
   if cmd == '!flip' or cmd == '.flip':
     conn.say('(ノ°▽°)ノ︵┻━┻'.decode('utf-8'), chan)
   elif cmd == '!unflip' or cmd == '.unflip':
