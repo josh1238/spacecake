@@ -15,17 +15,17 @@ def AddrFuncs(cmd, args, data, conn):
     slappee = data['sender'].split('!')[0]
     msg = "slaps %s with a floppy fish, then points at %s" % (target, slappee)
     conn.describe(msg, chan)
-  elif cmd == 'act':
+  elif cmd == 'act' and data['sender'] == 'josh1238!~josh1238@unaffiliated/josh1238':
     chan = args[0]
     msg = ' '.join(args[1:])
     conn.describe(msg, chan)
-  elif cmd == 'speak':
+  elif cmd == 'speak' and data['sender'] == 'josh1238!~josh1238@unaffiliated/josh1238':
     chan = args[0]
     msg = ' '.join(args[1:])
     conn.say(msg, chan)
   elif cmd == 'quit':
-    asker = data['sender'].split('!')[0]
-    if asker == 'josh1238':
+    asker = data['sender']
+    if asker == 'josh1238!~josh1238@unaffiliated/josh1238':
       conn.quit('shutting down')
     else:
       conn.say('┌∩┐(ಠ_ಠ)┌∩┐'.decode('utf-8'), chan)

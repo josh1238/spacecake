@@ -330,7 +330,7 @@ class Bot(object):
     except IndexError:
       args = []
     if is_to_me and cmd == 'reload':
-      if data['sender'].split('!')[0] == 'josh1238':
+      if data['sender'] == 'josh1238!~josh1238@unaffiliated/josh1238':
         reload(com)
         self.conn.say('Commands module reloaded', 'josh1238')
       else:
