@@ -65,6 +65,7 @@ class IRCConn(object):
 
   def connect(self):
     self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    self.sock.settimeout(600)
     self.sock.connect((self.host, self.port))
     self.connected = True
     self._send("USER %s %s %s :%s" % (self.ident, '0', '*', self.name))
@@ -331,7 +332,7 @@ class Bot(object):
     if is_to_me and cmd == 'reload':
       if data['sender'].split('!')[0] == 'josh1238':
         reload(com)
-        self.conn.say('Commands module reloaded', self.ident['chan'])
+        self.conn.say('Commands module reloaded', 'josh1238')
       else:
         self.conn.say('┌∩┐(ಠ_ಠ)┌∩┐'.decode('utf-8'), self.ident['chan'])
     elif is_to_me and cmd in com.addrls:
