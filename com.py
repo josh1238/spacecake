@@ -52,8 +52,8 @@ def OnJoinFuncs(channel, conn):
 def OtherJoinFuncs(data, conn):
   if data['nick'] == 'zeezey':
     conn.say('( ´・ω・)つ──☆✿✿✿✿✿✿ Welcome to the channel zeezey!'.decode('utf-8'), data['channel'])
-  else:
-    conn.say('Hi my name is spacecake', data['channel'])
+#  else:
+#    conn.say('Hi my name is spacecake', data['channel'])
 
 def OnKickedFuncs(msg, data, conn):
   pass
