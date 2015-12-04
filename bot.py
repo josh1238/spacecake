@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
+import time
 import sys
 import socket
 import threading
@@ -281,6 +282,8 @@ class IRCConn(object):
         self.handler.handle_other_join(tokens, prefix)
     elif cmd == 'PRIVMSG':
       self.handler.handle_privmsg(tokens, prefix)
+    elif cmd == 'QUIT':
+      self.handler.handle_quit(tokens, prefix)
 
   def handle_encoding_error(self):
     print 'Encoding error encountered.'
@@ -288,8 +291,11 @@ class IRCConn(object):
   def handle_error(self, tokens):
     print "Error. tokens: %s" % tokens
     if tokens[0] == ':Closing' and tokens[1] == 'Link:':
-    #self.connect()
-      sys.exit(1)
+      if tokens[3] == '(Ping' and tokens[4] == 'timeout:':
+        time.sleep(5)
+        self.connect()
+      else:
+        sys.exit(1)
 
   def on_connect(self):
     """
