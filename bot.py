@@ -15,8 +15,8 @@ ident = {
   'nick': 'spacecake',
 #  'nick': 'potbot',
   'real_name': 'Space Cake',
-  'chan': '#r.trees'
-#  'chan': '#politic'
+#  'chan': '#testChanForSpa'
+  'chan': ['#r.trees']
 }
 
 def colorize(text, color):
@@ -91,7 +91,7 @@ class IRCConn(object):
     if to is None:
       prefix = ''
     else:
-      to = "%s: " % to
+      prefix = "%s: " % to
 
     for line in msg.splitlines():
       self._send("PRIVMSG %s :%s%s" % (chan, prefix, line))
@@ -186,8 +186,8 @@ class IRCConn(object):
     """
     Join channel @chan.
     """
-    self._send("JOIN %s" % self.join_first)
-    self.channels.add(self.join_first)
+    self._send("JOIN %s" % chan)
+    self.channels.add(chan)
     self.handler.handle_join(chan)
 
   def leave(self, msg, chan):
@@ -332,9 +332,9 @@ class Bot(object):
     if is_to_me and cmd == 'reload':
       if data['sender'] == 'josh1238!~josh1238@unaffiliated/josh1238':
         reload(com)
-        self.conn.say('Commands module reloaded', 'josh1238')
+        self.conn.say('Commands module reloaded', data['sender'].split('!')[0])
       else:
-        self.conn.say('┌∩┐(ಠ_ಠ)┌∩┐'.decode('utf-8'), self.ident['chan'])
+        self.conn.say('┌∩┐(ಠ_ಠ)┌∩┐'.decode('utf-8'), data['sender'].split('!')[0])
     elif is_to_me and cmd in com.addrls:
       com.AddrFuncs(cmd, args, data, self.conn)
     elif cmd in com.ls:

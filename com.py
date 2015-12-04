@@ -5,8 +5,9 @@ This is a module for bot commands so that bot.py can import them.
 Commands are if statements within functions. The ls tables let bot.py know that the command exists.
 """
 
-addrls = ['act','speak','quit','slap','die']
+addrls = ['part','join','act','speak','quit','slap','die']
 ls = ['!help','.help','!unflip','.unflip','!flip','.flip','^5']
+trusted = 'josh1238!~josh1238@unaffiliated/josh1238'
 
 def AddrFuncs(cmd, args, data, conn):
   chan = data['channel']
@@ -15,17 +16,31 @@ def AddrFuncs(cmd, args, data, conn):
     slappee = data['sender'].split('!')[0]
     msg = "slaps %s with a floppy fish, then points at %s" % (target, slappee)
     conn.describe(msg, chan)
-  elif cmd == 'act' and data['sender'] == 'josh1238!~josh1238@unaffiliated/josh1238':
+  elif cmd == 'part' and data['sender'] == trusted:
+    chan = args[0]
+    msg = ' '.join(args[1:])
+    conn.leave(msg, chan)
+  elif cmd == 'join' and data['sender'] == trusted:
+    chan = args[0]
+    conn.join(chan)
+  elif cmd == 'act' and data['sender'] == trusted:
     chan = args[0]
     msg = ' '.join(args[1:])
     conn.describe(msg, chan)
-  elif cmd == 'speak' and data['sender'] == 'josh1238!~josh1238@unaffiliated/josh1238':
+  elif cmd == 'speak' and data['sender'] == trusted:
     chan = args[0]
-    msg = ' '.join(args[1:])
-    conn.say(msg, chan)
+    if args[1] == 'to':
+      to = args[2]
+      msg = ' '.join(args[3:])
+    else:
+      msg = ' '.join(args[1:])
+    if to:
+      conn.say(msg, chan, to)
+    else:
+      conn.say(msg, chan)
   elif cmd == 'quit':
     asker = data['sender']
-    if asker == 'josh1238!~josh1238@unaffiliated/josh1238':
+    if asker == trusted:
       conn.quit('shutting down')
     else:
       conn.say('┌∩┐(ಠ_ಠ)┌∩┐'.decode('utf-8'), chan)
