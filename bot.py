@@ -282,8 +282,6 @@ class IRCConn(object):
         self.handler.handle_other_join(tokens, prefix)
     elif cmd == 'PRIVMSG':
       self.handler.handle_privmsg(tokens, prefix)
-    elif cmd == 'QUIT':
-      self.handler.handle_quit(tokens, prefix)
 
   def handle_encoding_error(self):
     print 'Encoding error encountered.'
