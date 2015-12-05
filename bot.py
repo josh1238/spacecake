@@ -6,19 +6,8 @@ import socket
 import threading
 import com
 from imp import reload
-
-ident = {
-  'ident': 'SpaceCake',
-  'host': 'irc.freenode.net',
-#  'host': 'irc.efnet.org',
-  'port': 6667,
-#  'serv': 'whatIsThisVariableForAgain',
-  'nick': 'spacecake',
-#  'nick': 'potbot',
-  'real_name': 'Space Cake',
-#  'chan': '#testChanForSpa'
-  'chan': ['#r.trees']
-}
+from ident import freenode
+#from ident import efnet
 
 def colorize(text, color):
   """
@@ -383,4 +372,5 @@ class Bot(object):
     """
     self.conn.mainloop()
 
-potbot = Bot(ident)
+potbot = Bot(freenode)
+#potbot = Bot(efnet)
