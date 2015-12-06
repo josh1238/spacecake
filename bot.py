@@ -44,7 +44,6 @@ class IRCConn(object):
     self.handler = handler
     i = handler.ident
     self.ident = i['ident']
-#    self.serv = i['serv']
     self.host = i['host']
     self.name = i['real_name']
     self.nick = i['nick']
@@ -323,7 +322,7 @@ class Bot(object):
     except IndexError:
       args = []
     if is_to_me and cmd == 'reload':
-      if data['sender'] == 'josh1238!~josh1238@unaffiliated/josh1238':
+      if data['sender'] == com.trusted:
         reload(com)
         self.conn.say('Commands module reloaded', data['sender'].split('!')[0])
       else:
