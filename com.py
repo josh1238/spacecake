@@ -6,7 +6,7 @@ Commands are if statements within functions. The ls tables let bot.py know that 
 """
 import random
 
-addrls = ['part','join','act','speak','quit','slap','die'.decode('utf-8')]
+addrls = ['whohere','part','join','act','speak','quit','slap','die'.decode('utf-8')]
 ls = ['happy','dong','smoak','donger','!help','.help','!unflip','.unflip','!flip','.flip','^5'.decode('utf-8')]
 trusted = 'josh1238!~josh1238@unaffiliated/josh1238'
 donger = ['ヽ〳 ՞ ᗜ ՞ 〵ง'.decode('utf-8'),
@@ -40,7 +40,10 @@ donger = ['ヽ〳 ՞ ᗜ ՞ 〵ง'.decode('utf-8'),
 
 def AddrFuncs(cmd, args, data, conn):
   chan = data['channel']
-  if cmd == 'slap':
+  if cmd == 'whohere':
+    msg = "Users in %s: %s %s" % (chan, ' '.join(conn.nicks[chan]), str(len(conn.nicks[chan])))
+    conn.say(msg, 'josh1238')
+  elif cmd == 'slap':
     target = args[0]
     slappee = data['sender'].split('!')[0]
     if target in conn.nicks:
