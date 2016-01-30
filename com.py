@@ -43,7 +43,10 @@ def AddrFuncs(cmd, args, data, conn):
   if cmd == 'slap':
     target = args[0]
     slappee = data['sender'].split('!')[0]
-    msg = "slaps %s with a floppy fish, then points at %s" % (target, slappee)
+    if target in conn.nicks:
+      msg = "slaps %s with a floppy fish, then points at %s" % (target, slappee)
+    else:
+      msg = "can't find %s" % target
     conn.describe(msg, chan)
   elif cmd == 'part' and data['sender'] == trusted:
     chan = args[0]

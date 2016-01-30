@@ -51,6 +51,7 @@ class IRCConn(object):
     self.port = i['port']
     self.connected = False
     self.channels = set()
+    self.nicks = {}
 
   def connect(self):
     self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -257,8 +258,8 @@ class IRCConn(object):
       self.on_connect()
     elif cmd == '422':    # No MOTD file
       self.on_connect()
-#    elif cmd == '353':    # Names list
-#      self.handler.handle_name_list(tokens)
+    elif cmd == '353':    # Names list
+      self.handler.handle_name_list(tokens)
     elif cmd == 'PING':
       self.pong(' '.join(tokens))
     elif cmd == 'ERROR':
@@ -332,13 +333,14 @@ class Bot(object):
     elif cmd in com.ls:
       com.UnAddrFuncs(cmd, args, data, self.conn)
 
-#  def handle_name_list(self, tokens):
-#    tokens.pop(0) # get rid of our nick from the beginning of the msg.
-#    tokens.pop(0) # get rid of the equals sign(?!)
-#    chan = tokens.pop(0)
-#    nicks = [t.lstrip(':') for t in tokens]
-#    for func in getattr(self.cmds, 'on_name_list', []):
-#      func(nicks, channel)
+  def handle_name_list(self, tokens):
+    tokens.pop(0) # get rid of our nick from the beginning of the msg.
+    tokens.pop(0) # get rid of the equals sign
+    chan = tokens.pop(0)
+    try:
+      self.conn.nicks[chan] += [t.lstrip(':') for t in tokens]
+    except:
+      self.conn.nicks[chan] = [t.lstrip(':') for t in tokens]
 
   def handle_join(self, channel):
     com.OnJoinFuncs(channel, self.conn)
