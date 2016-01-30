@@ -328,9 +328,9 @@ class Bot(object):
         self.conn.say('Commands module reloaded', data['sender'].split('!')[0])
       else:
         self.conn.say('┌∩┐(ಠ_ಠ)┌∩┐'.decode('utf-8'), data['sender'].split('!')[0])
-    elif is_to_me and cmd in com.addrls:
+    elif is_to_me:
       com.AddrFuncs(cmd, args, data, self.conn)
-    elif cmd in com.ls:
+    else:
       com.UnAddrFuncs(cmd, args, data, self.conn)
 
   def handle_name_list(self, tokens):
