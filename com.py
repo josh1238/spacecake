@@ -4,8 +4,9 @@
 This is a module for bot commands so that bot.py can import them.
 Commands are if statements within functions. The ls tables let bot.py know that the command exists.
 """
-import random
 import cleverbot
+import random
+import re
 
 trusted = 'josh1238!~josh1238@unaffiliated/josh1238'
 donger = ['ヽ〳 ՞ ᗜ ՞ 〵ง'.decode('utf-8'),
@@ -41,7 +42,10 @@ def AddrFuncs(cmd, args, data, conn):
   chan = data['channel']
   if cmd.lower() == 'whohere':
     msg = "Users in %s: %s %s" % (chan, ' '.join(conn.nicks[chan]), str(len(conn.nicks[chan])))
-    conn.say(msg, 'josh1238')
+    print msg
+  elif cmd.lower() == 'lastmessages':
+    for row in conn.lastMsg:
+      print "%s: %s" % (row, conn.lastMsg[row])
   elif cmd.lower() == 'slap':
     target = args[0]
     slappee = data['sender'].split('!')[0]
@@ -83,13 +87,19 @@ def AddrFuncs(cmd, args, data, conn):
 
 def UnAddrFuncs(cmd, args, data, conn):
   chan = data['channel']
+  sendNick = data['sender'].split('!')[0]
   if cmd.lower() == '.cb' or cmd.lower() == '!cb':
     pass
-  elif re.match('s/.+/.*/', cmd)
+  elif re.match('s/.+/.*/', cmd):
+    pass # unobot is handling this function atm
     pre = cmd.split('/')[1]
     suf = cmd.split('/')[2]
-    # need some sort of memory of past PRIVMSG's per channel (per user?)
-    pass
+    if conn.lastMsg[sendNick]:
+      msgre = conn.lastMsg[sendNick].replace(pre, suf)
+      msg = "%s meant to say: %s" % (sendNick, msgre)
+      conn.say(msg, chan)
+    else:
+      conn.say('i fucked up', chan)
   elif cmd.lower() == '!help' or cmd.lower() == '.help':
     conn.say("happypizza doesn't want to help you", chan)
   elif cmd.lower() == 'happy':

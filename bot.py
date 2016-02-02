@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # coding=utf-8
-import time
-import sys
-import socket
-import threading
 import com
+import socket
+#import sqlite3
+import sys
+import threading
+import time
 from imp import reload
 from ident import freenode
 #from ident import efnet
@@ -52,6 +53,9 @@ class IRCConn(object):
     self.connected = False
     self.channels = set()
     self.nicks = {}
+    self.lastMsg = {}
+#    self.dbconn = sqlite3.connect('cavern.db')
+#    self.dbc = self.dbconn.cursor()
 
   def connect(self):
     self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -266,11 +270,22 @@ class IRCConn(object):
       self.handle_error(tokens)
     elif cmd == 'KICK':
       self.handler.handle_kick(tokens, prefix)
+      channer = tokens[0]
+      kicked = tokens[1]
+      self.nicks[channer].remove(kicked)
     elif cmd == 'JOIN':
       if prefix.split('!')[0] != self.nick:
         self.handler.handle_other_join(tokens, prefix)
+        self.nicks[tokens[0]].append(prefix.split('!')[0])
     elif cmd == 'PRIVMSG':
       self.handler.handle_privmsg(tokens, prefix)
+    elif cmd == 'QUIT':
+      quitter = prefix.split('!')[0]
+      for key in self.nicks:
+        if quitter in self.nicks[key]:
+          self.nicks[key].remove(quitter)
+    elif cmd == 'PART':
+      self.nicks[tokens[0]].remove(prefix.split('!')[0])
 
   def handle_encoding_error(self):
     print 'Encoding error encountered.'
@@ -300,7 +315,6 @@ class Bot(object):
   """
   def __init__(self, ident):
     self.ident = ident
-#    self.cmds = com
     self.conn = IRCConn(self)
     self.conn.connect()
 
@@ -332,6 +346,9 @@ class Bot(object):
       com.AddrFuncs(cmd, args, data, self.conn)
     else:
       com.UnAddrFuncs(cmd, args, data, self.conn)
+    self.conn.lastMsg[nick] = ' '.join(tokens)
+#    self.conn.dbc.execute("delete from lastMsg where nick = ?", nick)
+#    self.conn.dbc.execute("insert into lastMsg values (?,?)", nick, tokens)
 
   def handle_name_list(self, tokens):
     tokens.pop(0) # get rid of our nick from the beginning of the msg.
@@ -346,7 +363,7 @@ class Bot(object):
     com.OnJoinFuncs(channel, self.conn)
 
   def handle_other_join(self, tokens, joiner):
-    chan = tokens.pop().strip(':')
+    chan = tokens[0].strip(':')
     nick, host = joiner.split('!')
     data = {'channel': chan, 'joiner': joiner, 'nick': nick, 'host': host}
     com.OtherJoinFuncs(data, self.conn)
