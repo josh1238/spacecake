@@ -59,7 +59,7 @@ class IRCConn(object):
 
   def connect(self):
     self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    self.sock.settimeout(600)
+    self.sock.settimeout(300)
     self.sock.connect((self.host, self.port))
     self.connected = True
     self._send("USER %s %s %s :%s" % (self.ident, '0', '*', self.name))
@@ -321,17 +321,22 @@ class Bot(object):
   def handle_privmsg(self, tokens, sender):
     chan = tokens.pop(0)
     tokens[0] = tokens[0].strip(':')
+    nick, host = sender.split('!')
+    if chan == self.ident['nick']:
+      chan = nick
+      msg = "%s told spacecake: %s" % (nick, ' '.join(tokens))
+      self.conn.say(msg,'josh1238')
     if tokens[0] == self.ident['nick']:
       l = [tokens.pop(0)]
       is_to_me = True
     else:
       is_to_me = False
-    nick, host = sender.split('!')
-    if chan == self.ident['nick']:
-      chan = nick
     data = {'channel': chan, 'sender': sender, 'is_to_me': is_to_me,
             'nick': nick, 'host': host}
-    cmd = tokens[0]
+    try:
+      cmd = tokens[0]
+    except IndexError:
+      cmd = 'none'
     try:
       args = tokens[1:]
     except IndexError:
@@ -342,6 +347,8 @@ class Bot(object):
         self.conn.say('Commands module reloaded', data['sender'].split('!')[0])
       else:
         self.conn.say('┌∩┐(ಠ_ಠ)┌∩┐'.decode('utf-8'), data['sender'].split('!')[0])
+    elif is_to_me and cmd == 'none':
+      self.conn.say("%s" % nick, chan)
     elif is_to_me:
       com.AddrFuncs(cmd, args, data, self.conn)
     else:

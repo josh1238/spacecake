@@ -46,6 +46,9 @@ def AddrFuncs(cmd, args, data, conn):
   elif cmd.lower() == 'lastmessages':
     for row in conn.lastMsg:
       print "%s: %s" % (row, conn.lastMsg[row])
+  elif cmd.lower() == 'channels':
+    msg = "I'm in these channels: %s" % ' '.join(conn.channels)
+    conn.say(msg, 'josh1238')
   elif cmd.lower() == 'slap':
     target = args[0]
     slappee = data['sender'].split('!')[0]
@@ -97,9 +100,10 @@ def UnAddrFuncs(cmd, args, data, conn):
     if conn.lastMsg[sendNick]:
       msgre = conn.lastMsg[sendNick].replace(pre, suf)
       msg = "%s meant to say: %s" % (sendNick, msgre)
-      conn.say(msg, chan)
+#      conn.say(msg, chan)
     else:
-      conn.say('i fucked up', chan)
+      pass
+#      conn.say('i fucked up', chan)
   elif cmd.lower() == '!help' or cmd.lower() == '.help':
     conn.say("happypizza doesn't want to help you", chan)
   elif cmd.lower() == 'happy':
@@ -127,7 +131,7 @@ def OtherJoinFuncs(data, conn):
 #    conn.say('Hi my name is spacecake', data['channel'])
 
 def OnKickedFuncs(msg, data, conn):
-  pass
+  conn.channels.remove(data['channel'])
 
 def OtherKickedFuncs(msg, data, conn):
   chan = data['channel']
