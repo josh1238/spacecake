@@ -6,9 +6,21 @@ import socket
 import sys
 import threading
 import time
+import logging
+from logging.handlers import RotatingFileHandler
 from imp import reload
 from ident import freenode
 #from ident import efnet
+
+# Setup log file
+formatter = logging.Formatter('%(asctime)s %(name)s - %(levelname)s: %(message)s')
+logger = logging.getLogger('chroot')
+logger.setLevel(logging.DEBUG)
+handler = RotatingFileHandler(filename='/var/log/spacecake/bot.log', maxBytes=1073741824, backupCount=15)
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+pm = logging.getLogger('privateMessage')
+pm.addHandler(handler)
 
 def colorize(text, color):
   """
@@ -205,6 +217,7 @@ class IRCConn(object):
     Send something (anything) to the IRC server.
     """
     print "Sending: %s\r\n" % msg
+    logger.info("Sending: %s\r\n" % msg)
     self.sock.send(("%s\r\n" % msg).encode('utf-8'))
 
   def pong(self, trail):
@@ -229,6 +242,7 @@ class IRCConn(object):
             self.handle_encoding_error()
             return ''
           print "received: %s" % line
+          logger.info("received: %s" % line)
           return line
       buf.append(ch)
       if nxt_ch:
@@ -239,6 +253,7 @@ class IRCConn(object):
       try:
         parsable = line.strip(b'\r\n').decode('utf-8')
         print "Received: %s" % parsable
+        logger.info("Received: %s" % parsable)
         return parsable
       except(UnicodeEncodeError, UnicodeDecodeError):
         self.handle_encoding_error()
@@ -260,6 +275,8 @@ class IRCConn(object):
       self._send("NICK %s" % self.nick)
     elif cmd == '376':    # end of MOTD
       self.on_connect()
+    elif cmd == 'NICK' and prefix.split('!')[0] == self.nick:
+      self.nick = tokens[0]
     elif cmd == '422':    # No MOTD file
       self.on_connect()
     elif cmd == '353':    # Names list
@@ -289,9 +306,11 @@ class IRCConn(object):
 
   def handle_encoding_error(self):
     print 'Encoding error encountered.'
+    logger.warning('Encoding error encountered.')
 
   def handle_error(self, tokens):
     print "Error. tokens: %s" % tokens
+    logger.critical("Error. tokens: %s" % tokens)
     if tokens[0] == ':Closing' and tokens[1] == 'Link:':
       if tokens[3] == '(Ping' and tokens[4] == 'timeout:':
         time.sleep(5)
@@ -322,11 +341,13 @@ class Bot(object):
     chan = tokens.pop(0)
     tokens[0] = tokens[0].strip(':')
     nick, host = sender.split('!')
-    if chan == self.ident['nick']:
+    if chan == self.conn.nick:
+      print "\nPM: %s\n" % ' '.join(tokens)
+      pm.critical("From %s: %s" % (nick, ' '.join(tokens)))
       chan = nick
       msg = "%s told spacecake: %s" % (nick, ' '.join(tokens))
       self.conn.say(msg,'josh1238')
-    if tokens[0] == self.ident['nick']:
+    if tokens[0] == self.conn.nick:
       l = [tokens.pop(0)]
       is_to_me = True
     else:

@@ -52,7 +52,7 @@ def AddrFuncs(cmd, args, data, conn):
   elif cmd.lower() == 'slap':
     target = args[0]
     slappee = data['sender'].split('!')[0]
-    if target in conn.nicks:
+    if target in conn.nicks[chan]:
       msg = "slaps %s with a floppy fish, then points at %s" % (target, slappee)
     else:
       msg = "can't find %s" % target
@@ -64,6 +64,9 @@ def AddrFuncs(cmd, args, data, conn):
   elif cmd.lower() == 'join' and data['sender'] == trusted:
     chan = args[0]
     conn.join(chan)
+  elif cmd.lower() == 'nick' and data['sender'] == trusted:
+    hancock = args[0]
+    conn._send("NICK %s" % hancock)
   elif cmd.lower() == 'act' and data['sender'] == trusted:
     chan = args[0]
     msg = ' '.join(args[1:])
@@ -126,7 +129,7 @@ def OnJoinFuncs(channel, conn):
 
 def OtherJoinFuncs(data, conn):
   if data['nick'] == 'zeezey':
-    conn.say('( ´・ω・)つ──☆✿✿✿✿✿✿ Welcome President zeezey!'.decode('utf-8'), data['channel'])
+    conn.say('President zeezey!', data['channel'])
 #  else:
 #    conn.say('Hi my name is spacecake', data['channel'])
 
