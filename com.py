@@ -3,6 +3,11 @@
 """
 This is a module for bot commands so that bot.py can import them.
 Commands are if statements within functions. The ls tables let bot.py know that the command exists.
+
+TODO
+Clean up formatting
+Add some comments (maybe)
+Exception handling
 """
 import cleverbot
 import random
@@ -41,6 +46,7 @@ donger = ['ヽ〳 ՞ ᗜ ՞ 〵ง'.decode('utf-8'),
 def AddrFuncs(cmd, args, data, conn):
   chan = data['channel']
   if cmd.lower() == 'whohere':
+    chan = args[0]
     msg = "Users in %s: %s %s" % (chan, ' '.join(conn.nicks[chan]), str(len(conn.nicks[chan])))
     print msg
   elif cmd.lower() == 'lastmessages':
@@ -90,23 +96,35 @@ def AddrFuncs(cmd, args, data, conn):
       conn.say('┌∩┐(ಠ_ಠ)┌∩┐'.decode('utf-8'), chan)
   elif cmd.lower() == 'die':
     conn.say('nou', chan)
+  else:
+    msg = ' '.join(args)
+    try:
+      print cb
+    except:
+      cb = cleverbot.Cleverbot()
+    answer = cb.ask(msg)
+    conn.say(answer, chan)
 
 def UnAddrFuncs(cmd, args, data, conn):
   chan = data['channel']
   sendNick = data['sender'].split('!')[0]
   if cmd.lower() == '.cb' or cmd.lower() == '!cb':
-    pass
+    msg = ' '.join(args)
+    try:
+      print cb
+    except:
+      cb = cleverbot.Cleverbot()
+    answer = cb.ask(msg)
+    conn.say(answer, chan)
   elif re.match('s/.+/.*/', cmd):
-    pass # unobot is handling this function atm
     pre = cmd.split('/')[1]
     suf = cmd.split('/')[2]
     if conn.lastMsg[sendNick]:
       msgre = conn.lastMsg[sendNick].replace(pre, suf)
       msg = "%s meant to say: %s" % (sendNick, msgre)
-#      conn.say(msg, chan)
+      conn.say(msg, chan)
     else:
-      pass
-#      conn.say('i fucked up', chan)
+      conn.say('i fucked up', chan)
   elif cmd.lower() == '!help' or cmd.lower() == '.help':
     conn.say("happypizza doesn't want to help you", chan)
   elif cmd.lower() == 'happy':
@@ -128,10 +146,9 @@ def OnJoinFuncs(channel, conn):
   pass
 
 def OtherJoinFuncs(data, conn):
-  if data['nick'] == 'zeezey':
-    conn.say('President zeezey!', data['channel'])
-#  else:
-#    conn.say('Hi my name is spacecake', data['channel'])
+  chan = data['channel']
+  if data['joiner'].split('!')[0] == 'redmagnus':
+    conn.describe('drives circles around redmagnus while drinking a beer', chan)
 
 def OnKickedFuncs(msg, data, conn):
   conn.channels.remove(data['channel'])

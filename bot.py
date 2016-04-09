@@ -2,7 +2,6 @@
 # coding=utf-8
 import com
 import socket
-#import sqlite3
 import sys
 import threading
 import time
@@ -20,6 +19,7 @@ handler = RotatingFileHandler(filename='/var/log/spacecake/bot.log', maxBytes=10
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 pm = logging.getLogger('privateMessage')
+pm.setLevel(logging.CRITICAL)
 pm.addHandler(handler)
 
 def colorize(text, color):
@@ -66,8 +66,6 @@ class IRCConn(object):
     self.channels = set()
     self.nicks = {}
     self.lastMsg = {}
-#    self.dbconn = sqlite3.connect('cavern.db')
-#    self.dbc = self.dbconn.cursor()
 
   def connect(self):
     self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -286,10 +284,10 @@ class IRCConn(object):
     elif cmd == 'ERROR':
       self.handle_error(tokens)
     elif cmd == 'KICK':
-      self.handler.handle_kick(tokens, prefix)
       channer = tokens[0]
       kicked = tokens[1]
       self.nicks[channer].remove(kicked)
+      self.handler.handle_kick(tokens, prefix)
     elif cmd == 'JOIN':
       if prefix.split('!')[0] != self.nick:
         self.handler.handle_other_join(tokens, prefix)
@@ -375,8 +373,6 @@ class Bot(object):
     else:
       com.UnAddrFuncs(cmd, args, data, self.conn)
     self.conn.lastMsg[nick] = ' '.join(tokens)
-#    self.conn.dbc.execute("delete from lastMsg where nick = ?", nick)
-#    self.conn.dbc.execute("insert into lastMsg values (?,?)", nick, tokens)
 
   def handle_name_list(self, tokens):
     tokens.pop(0) # get rid of our nick from the beginning of the msg.
