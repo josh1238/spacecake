@@ -8,14 +8,15 @@ import time
 import logging
 from logging.handlers import RotatingFileHandler
 from imp import reload
-from ident import freenode
-#from ident import efnet
+from ident import danknode
 
 # Setup log file
-formatter = logging.Formatter('%(asctime)s %(name)s - %(levelname)s: %(message)s')
+formatter = logging.Formatter('%(asctime)s %(name)s - %(levelname)s: \
+                               %(message)s')
 logger = logging.getLogger('chroot')
 logger.setLevel(logging.DEBUG)
-handler = RotatingFileHandler(filename='/var/log/spacecake/bot.log', maxBytes=1073741824, backupCount=15)
+handler = RotatingFileHandler(filename='/var/log/spacecake/bot.log',
+                              maxBytes=1073741824, backupCount=15)
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 pm = logging.getLogger('privateMessage')
@@ -24,24 +25,24 @@ pm.addHandler(handler)
 
 def colorize(text, color):
   """
-  Adds color (code @color) to text @text, which can then be embedded in a
-  message.
+  Adds color (code @color) to text @text, which can then be embedded in
+  a message.
   """
   # \x03<zero-padded-to-width-2-color><text>\x03
   return "\x03%02d%s\x03" % (color, text)
 
 def bold(text):
   """
-  Returns text @text with bold formatting, which can then be embedded in a
-  message.
+  Returns text @text with bold formatting, which can then be embedded in
+  a message.
   """
   # \x02<text>\x02
   return "\x02%s\x02" % text
 
 def underline(text):
   """
-  Returns text @text with underline formatting, which can then be embedded in 
-  a message.
+  Returns text @text with underline formatting, which can then be
+  embedded in a message.
   """
   # \x1f<text>\x1f
   return "\x1f%s\x1f" % text
@@ -266,7 +267,8 @@ class IRCConn(object):
       prefix = tokens.pop(0)[1:].strip(':')
     else:
       prefix = ''
-    # Apparently, mIRC does not send uppercase commands (from Twisted's IRC)
+    # Apparently, mIRC does not send uppercase commands (from Twisted's
+    # IRC)
     cmd = tokens.pop(0).upper()
     if cmd == '433':      # nick already in use
       self.nick += '_'
@@ -344,7 +346,7 @@ class Bot(object):
       pm.critical("From %s: %s" % (nick, ' '.join(tokens)))
       chan = nick
       msg = "%s told spacecake: %s" % (nick, ' '.join(tokens))
-      self.conn.say(msg,'josh1238')
+      self.conn.say(msg,'afsa')
     if tokens[0] == self.conn.nick:
       l = [tokens.pop(0)]
       is_to_me = True
@@ -363,9 +365,11 @@ class Bot(object):
     if is_to_me and cmd == 'reload':
       if data['sender'] == com.trusted:
         reload(com)
-        self.conn.say('Commands module reloaded', data['sender'].split('!')[0])
+        self.conn.say('Commands module reloaded',
+                       data['sender'].split('!')[0])
       else:
-        self.conn.say('┌∩┐(ಠ_ಠ)┌∩┐'.decode('utf-8'), data['sender'].split('!')[0])
+        self.conn.say('┌∩┐(ಠ_ಠ)┌∩┐'.decode('utf-8'),
+                       data['sender'].split('!')[0])
     elif is_to_me and cmd == 'none':
       self.conn.say("%s" % nick, chan)
     elif is_to_me:
@@ -401,7 +405,8 @@ class Bot(object):
     else:
       is_about_me = False
     nick, host = sender.split('!')
-    data = {'channel': chan, 'sender': sender, 'nick': nick, 'host': host, 'kickee': tokens.pop(0)}
+    data = {'channel': chan, 'sender': sender, 'nick': nick, 'host': host,
+            'kickee': tokens.pop(0)}
     msg = tokens[0].lstrip(':') if tokens else None
     if is_about_me:
       com.OnKickedFuncs(msg, data, self.conn)
@@ -414,5 +419,4 @@ class Bot(object):
     """
     self.conn.mainloop()
 
-potbot = Bot(freenode)
-#potbot = Bot(efnet)
+potbot = Bot(danknode)
