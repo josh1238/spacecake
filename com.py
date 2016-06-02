@@ -13,7 +13,8 @@ import cleverbot
 import random
 import re
 
-trusted = 'josh1238!~josh1238@unaffiliated/josh1238'
+#trusted = 'josh1238!~josh1238@unaffiliated/josh1238'
+trusted = 'afsa!afsa@25B9A5E.A8B0403A.AAABC2BE.IP'
 donger = ['ヽ〳 ՞ ᗜ ՞ 〵ง'.decode('utf-8'),
   's( ^ ‿ ^)-b'.decode('utf-8'),
   '(つ°ヮ°)つ  └⋃┘'.decode('utf-8'),
