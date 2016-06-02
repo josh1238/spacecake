@@ -3,10 +3,10 @@
 #
 # ex:
 # something = {
-#   ident     = '',
-#   host      = '',
-#   real_name = '',
-#   nick      = '',
-#   chan      = [''],
-#   port      = ,
+#   ident:     '',
+#   host:      '',
+#   real_name; '',
+#   nick:      '',
+#   chan:      [''],
+#   port:      ,
 # }
