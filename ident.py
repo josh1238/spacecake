@@ -5,7 +5,7 @@
 # something = {
 #   'ident':     '',
 #   'host':      '',
-#   'real_name'; '',
+#   'real_name': '',
 #   'nick':      '',
 #   'chan':      [''],
 #   'port':      ,
