@@ -63,6 +63,7 @@ class IRCConn(object):
     self.nick = i['nick']
     self.join_first = i['chan']
     self.port = i['port']
+    self.trusted = i['trusted']
     self.connected = False
     self.channels = set()
     self.nicks = {}
@@ -346,7 +347,8 @@ class Bot(object):
       pm.critical("From %s: %s" % (nick, ' '.join(tokens)))
       chan = nick
       msg = "%s told spacecake: %s" % (nick, ' '.join(tokens))
-      self.conn.say(msg,'afsa')
+      if nick != self.trusted.split('!')[0]:
+        self.conn.say(msg, self.trusted.split('!')[0])
     if tokens[0] == self.conn.nick:
       l = [tokens.pop(0)]
       is_to_me = True
@@ -363,7 +365,7 @@ class Bot(object):
     except IndexError:
       args = []
     if is_to_me and cmd == 'reload':
-      if data['sender'] == com.trusted:
+      if data['sender'] == self.trusted:
         reload(com)
         self.conn.say('Commands module reloaded',
                        data['sender'].split('!')[0])
