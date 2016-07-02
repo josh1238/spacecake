@@ -9,7 +9,6 @@ Clean up formatting
 Add some comments (maybe)
 Exception handling
 """
-import cleverbot
 import random
 import re
 
@@ -97,26 +96,12 @@ def AddrFuncs(cmd, args, data, conn):
   elif cmd.lower() == 'die':
     conn.say('nou', chan)
   else:
-    msg = ' '.join(args)
-    try:
-      print cb
-    except:
-      cb = cleverbot.Cleverbot()
-    answer = cb.ask(msg)
-    conn.say(answer, chan)
+    conn.say(random.choice(donger), chan)
 
 def UnAddrFuncs(cmd, args, data, conn):
   chan = data['channel']
   sendNick = data['sender'].split('!')[0]
-  if cmd.lower() == '.cb' or cmd.lower() == '!cb':
-    msg = ' '.join(args)
-    try:
-      print cb
-    except:
-      cb = cleverbot.Cleverbot()
-    answer = cb.ask(msg)
-    conn.say(answer, chan)
-  elif re.match('s/.+/.*/', cmd):
+  if re.match('s/.+/.*/', cmd):
     pre = cmd.split('/')[1]
     suf = cmd.split('/')[2]
     if conn.lastMsg[sendNick]:
@@ -126,7 +111,7 @@ def UnAddrFuncs(cmd, args, data, conn):
     else:
       conn.say('i fucked up', chan)
   elif cmd.lower() == '!help' or cmd.lower() == '.help':
-    conn.say("happypizza doesn't want to help you", chan)
+    conn.say("Help will be coming soon (but I don't promise)", chan)
   elif cmd.lower() == 'happy':
     if args[0].lower() == 'birthday' or args[0].lower() == 'bday':
       conn.say('♪O<( ･ ∀ ･ )っ┌iii┐'.decode('utf-8'), chan)
