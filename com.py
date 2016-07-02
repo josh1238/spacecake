@@ -53,9 +53,10 @@ def AddrFuncs(cmd, args, data, conn):
   elif cmd.lower() == 'lastmessages':
     for row in conn.lastMsg:
       print "%s: %s" % (row, conn.lastMsg[row])
-  elif cmd.lower() == 'channels':
+  elif cmd.lower() == 'channels' and data['sender'] == trusted:
     msg = "I'm in these channels: %s" % ' '.join(conn.channels)
-    conn.say(msg, 'josh1238')
+    chan2 = trusted.split('!')[0]
+    conn.say(msg, chan2)
   elif cmd.lower() == 'slap':
     target = args[0]
     slappee = data['sender'].split('!')[0]
