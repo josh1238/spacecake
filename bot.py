@@ -347,8 +347,8 @@ class Bot(object):
       pm.critical("From %s: %s" % (nick, ' '.join(tokens)))
       chan = nick
       msg = "%s told spacecake: %s" % (nick, ' '.join(tokens))
-      if nick != self.trusted.split('!')[0]:
-        self.conn.say(msg, self.trusted.split('!')[0])
+      if nick != self.conn.trusted.split('!')[0]:
+        self.conn.say(msg, self.conn.trusted.split('!')[0])
     if tokens[0] == self.conn.nick:
       l = [tokens.pop(0)]
       is_to_me = True
@@ -365,7 +365,7 @@ class Bot(object):
     except IndexError:
       args = []
     if is_to_me and cmd == 'reload':
-      if data['sender'] == self.trusted:
+      if data['sender'] == self.conn.trusted:
         reload(com)
         self.conn.say('Commands module reloaded',
                        data['sender'].split('!')[0])
