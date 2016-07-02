@@ -9,4 +9,5 @@
 #   'nick':      '',
 #   'chan':      [''],
 #   'port':      ,
+#   'trusted':   '',
 # }

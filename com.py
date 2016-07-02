@@ -13,8 +13,6 @@ import cleverbot
 import random
 import re
 
-#trusted = 'josh1238!~josh1238@unaffiliated/josh1238'
-trusted = 'afsa!afsa@25B9A5E.A8B0403A.AAABC2BE.IP'
 donger = ['ヽ〳 ՞ ᗜ ՞ 〵ง'.decode('utf-8'),
   's( ^ ‿ ^)-b'.decode('utf-8'),
   '(つ°ヮ°)つ  └⋃┘'.decode('utf-8'),
@@ -53,9 +51,9 @@ def AddrFuncs(cmd, args, data, conn):
   elif cmd.lower() == 'lastmessages':
     for row in conn.lastMsg:
       print "%s: %s" % (row, conn.lastMsg[row])
-  elif cmd.lower() == 'channels' and data['sender'] == trusted:
+  elif cmd.lower() == 'channels' and data['sender'] == conn.trusted:
     msg = "I'm in these channels: %s" % ' '.join(conn.channels)
-    chan2 = trusted.split('!')[0]
+    chan2 = conn.trusted.split('!')[0]
     conn.say(msg, chan2)
   elif cmd.lower() == 'slap':
     target = args[0]
@@ -65,21 +63,21 @@ def AddrFuncs(cmd, args, data, conn):
     else:
       msg = "can't find %s" % target
     conn.describe(msg, chan)
-  elif cmd.lower() == 'part' and data['sender'] == trusted:
+  elif cmd.lower() == 'part' and data['sender'] == conn.trusted:
     chan = args[0]
     msg = ' '.join(args[1:])
     conn.leave(msg, chan)
-  elif cmd.lower() == 'join' and data['sender'] == trusted:
+  elif cmd.lower() == 'join' and data['sender'] == conn.trusted:
     chan = args[0]
     conn.join(chan)
-  elif cmd.lower() == 'nick' and data['sender'] == trusted:
+  elif cmd.lower() == 'nick' and data['sender'] == conn.trusted:
     hancock = args[0]
     conn._send("NICK %s" % hancock)
-  elif cmd.lower() == 'act' and data['sender'] == trusted:
+  elif cmd.lower() == 'act' and data['sender'] == conn.trusted:
     chan = args[0]
     msg = ' '.join(args[1:])
     conn.describe(msg, chan)
-  elif cmd.lower() == 'speak' and data['sender'] == trusted:
+  elif cmd.lower() == 'speak' and data['sender'] == conn.trusted:
     chan = args[0]
     if args[1] == 'to':
       to = args[2]
@@ -92,7 +90,7 @@ def AddrFuncs(cmd, args, data, conn):
       conn.say(msg, chan)
   elif cmd.lower() == 'quit':
     asker = data['sender']
-    if asker == trusted:
+    if asker == conn.trusted:
       conn.quit('goodbye for now')
     else:
       conn.say('┌∩┐(ಠ_ಠ)┌∩┐'.decode('utf-8'), chan)
